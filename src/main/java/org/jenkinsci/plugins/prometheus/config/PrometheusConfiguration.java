@@ -47,6 +47,7 @@ public class PrometheusConfiguration extends GlobalConfiguration {
     private boolean countAbortedBuilds = true;
     private boolean fetchTestResults = true;
     private boolean collectNodeQueueDuration = true;
+    private boolean useNodeFullName = true;
 
     private boolean processingDisabledBuilds = false;
 
@@ -74,6 +75,7 @@ public class PrometheusConfiguration extends GlobalConfiguration {
         countAbortedBuilds = json.getBoolean("countAbortedBuilds");
         fetchTestResults = json.getBoolean("fetchTestResults");
         collectNodeQueueDuration = json.getBoolean("collectNodeQueueDuration");
+        useNodeFullName = json.getBoolean("useNodeFullName");
         collectingMetricsPeriodInSeconds = validateProcessingMetricsPeriodInSeconds(json);
 
         processingDisabledBuilds = json.getBoolean("processingDisabledBuilds");
@@ -197,6 +199,15 @@ public class PrometheusConfiguration extends GlobalConfiguration {
 
     public void setCollectNodeQueueDuration(boolean collectNodeQueueDuration) {
         this.collectNodeQueueDuration = collectNodeQueueDuration;
+        save();
+    }
+
+    public boolean isUseNodeFullName() {
+        return useNodeFullName;
+    }
+
+    public void setUseNodeFullName(boolean useNodeFullName) {
+        this.useNodeFullName = useNodeFullName;
         save();
     }
 

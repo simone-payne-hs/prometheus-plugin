@@ -133,6 +133,7 @@ public class PrometheusConfigurationTest {
         config.accumulate("countAbortedBuilds", "true");
         config.accumulate("fetchTestResults", "true");
         config.accumulate("collectNodeQueueDuration", "true");
+        config.accumulate("useNodeFullName", "true");
         config.accumulate("processingDisabledBuilds", "false");
         return config;
     }

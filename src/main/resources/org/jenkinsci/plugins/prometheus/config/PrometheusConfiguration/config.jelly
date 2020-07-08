@@ -31,7 +31,10 @@
     <f:entry title="${%Fetch the test results of builds}" field="fetchTestResults">
       <f:checkbox/>
     </f:entry>
-    <f:entry title="${%Fetch the test results of builds}" field="collectNodeQueueDuration">
+    <f:entry title="${%Collect node queue duration}" field="collectNodeQueueDuration">
+      <f:checkbox/>
+    </f:entry>
+    <f:entry title="${%Clean full node name for node queue duration}" field="useNodeFullName">
       <f:checkbox/>
     </f:entry>
     <f:entry title="${%Process disabled jobs}" field="processingDisabledBuilds">
