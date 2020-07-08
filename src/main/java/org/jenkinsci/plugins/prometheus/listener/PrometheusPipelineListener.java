@@ -2,13 +2,12 @@ package org.jenkinsci.plugins.prometheus.listener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import org.jenkinsci.plugins.prometheus.config.PrometheusConfiguration;
-import org.jenkinsci.plugins.prometheus.util.ConfigurationUtils;
 import org.jenkinsci.plugins.prometheus.util.NodeInfo;
+import org.jenkinsci.plugins.prometheus.NodeCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +18,7 @@ import hudson.model.Node;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.listeners.RunListener;
-import io.prometheus.client.Collector.MetricFamilySamples;
 import io.prometheus.client.Collector;
-import io.prometheus.client.Histogram;
 import io.prometheus.client.Summary;
 
 @Extension
@@ -46,8 +43,10 @@ public class PrometheusPipelineListener extends RunListener<Run> {
     public void onCompleted(Run run, @Nonnull TaskListener listener) {
         try {
             getAgentNodeInfo(run, node);
-            CustomCollector collecter = new CustomCollector();
-            collecter.collect();
+            // PipelineNodeCollector collecter = new PipelineNodeCollector();
+            // collecter.collect();
+            // NodeCollector collecter = new NodeCollector(node);
+            // collecter.collect();
             logger.debug("ON COMPLETED {}", node.getNodeName());
         } catch (Exception e) {
             String errorMessage = GENERATION_ERROR + e.getMessage();
@@ -56,44 +55,56 @@ public class PrometheusPipelineListener extends RunListener<Run> {
         }
     }
 
-    private class CustomCollector extends Collector {
-        public List<MetricFamilySamples> collect(){
-            logger.debug("Collecting node metrics for prometheus");
-            List<MetricFamilySamples> data = new ArrayList<MetricFamilySamples>();
+    // public class PipelineNodeCollector extends Collector {
+    //     public List<MetricFamilySamples> collect(){
+    //         logger.debug("Collecting node metrics for prometheus");
+    //         List<MetricFamilySamples> data = new ArrayList<MetricFamilySamples>();
 
-            boolean ignoreBuildMetrics = !PrometheusConfiguration.get().isCollectNodeQueueDuration();
-            if (ignoreBuildMetrics) {
-                logger.debug("ignoring");
-                return data;
-            }
-            String fullname = "nodes";
+    //         boolean ignoreBuildMetrics = !PrometheusConfiguration.get().isCollectNodeQueueDuration();
+    //         if (ignoreBuildMetrics) {
+    //             logger.debug("not collecting node queue duration");
+    //             return data;
+    //         }
+    //         String fullname = "nodes";
 
-            String[] labelNameArray = {node.getNodeName(), "queueDuration"};
-            Summary nodeDuration = Summary.build()
-                    .name(fullname + "_node_queue_duration_milliseconds_test")
-                    .help("Time node spent in queue in milliseconds")
-                    .labelNames(labelNameArray)
-                    .create();
+    //         String[] labelKeyArray = {"nodeName"};
+    //         String nodeName = cleanNodeName(node.getNodeName());
+    //         String[] labelValueArray = {nodeName};
+    //         Summary nodeDuration = Summary.build()
+    //                 .name(fullname + "_node_queue_duration_milliseconds_test_PIPELINE")
+    //                 .help("Time node spent in queue in milliseconds")
+    //                 .labelNames(labelKeyArray)
+    //                 .create();
 
-            Histogram nodeDurationHistogram = Histogram.build()
-                .name(fullname + "_node_queue_duration_milliseconds_histogram_test")
-                .help("Time node spent in queue in milliseconds as histogram")
-                .labelNames(labelNameArray)
-                .create();
+    //         nodeDuration.labels(labelValueArray).observe(node.getQueueDuration());
+    //         nodeDuration.collect();
+    //         try {
+    //             nodeDuration.register();
+    //         } catch (Exception e) {
+    //             logger.debug("Yeahhh..... This is fine....");
+    //         }
 
-            nodeDuration.labels(labelNameArray).observe(node.getQueueDuration());
-            nodeDurationHistogram.labels(labelNameArray).observe(node.getQueueDuration());
-            nodeDuration.register();
-            nodeDuration.collect();
-            nodeDurationHistogram.register();
-            nodeDurationHistogram.collect();
+    //         data.addAll(nodeDuration.collect());
 
-            data.addAll(nodeDuration.collect());
-            data.addAll(nodeDurationHistogram.collect());
+    //         return data;
+    //     }
+    // }
 
-            return data;
-        }
-    }
+    // private String cleanNodeName(String nodeName) {
+    //     boolean useFullNodeName = !PrometheusConfiguration.get().isUseNodeFullName();
+    //     if (useFullNodeName) {
+    //         logger.debug("not cleaning node name");
+    //         return nodeName;
+    //     }
+    //     if (nodeName.equals("master")) {
+    //         return nodeName;
+    //     }
+    //     String[] splitName = nodeName.split("-");
+    //     int numSplits = splitName.length;
+    //     String cleanNodeName = nodeName.replace("-" + splitName[numSplits - 1], "");
+
+    //     return cleanNodeName;
+    // }
 
 
     public static String getAgentNodeInfo(Run buildInfo, NodeInfo nodeInfo){
@@ -131,5 +142,9 @@ public class PrometheusPipelineListener extends RunListener<Run> {
         }
         logger.debug("unable to establish executor for job {}", buildInfo.getDisplayName());
         return nodeInfo.getNodeName();
+    }
+
+    public NodeInfo getNodeInfo() {
+        return node;
     }
 }

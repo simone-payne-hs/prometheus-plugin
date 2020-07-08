@@ -1,8 +1,8 @@
 package org.jenkinsci.plugins.prometheus.util;
 
 public class NodeInfo {
-    private String nodeName;
-    private long queueDuration;
+    private String nodeName = "";
+    private long queueDuration = 0;
 
     public String getNodeName() {
         return nodeName;
