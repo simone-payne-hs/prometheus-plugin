@@ -41,8 +41,6 @@ public class PipelineComputerListener extends ComputerListener {
     @Override
     public void preLaunch(Computer computer, TaskListener listener) throws IOException, InterruptedException {
         try {
-            logger.debug("+++++++++++ A NEW COMPUTER LAUNCHING ++++++ {} -- {}", computer.getName(), java.lang.System.currentTimeMillis());
-        
             node.setLaunchTime(java.lang.System.currentTimeMillis());;
         } catch (Exception e) {
             String errorMessage = PRELAUNCH_ERROR + e.getMessage();
@@ -54,8 +52,6 @@ public class PipelineComputerListener extends ComputerListener {
     @Override
     public void onOnline(Computer computer, TaskListener listener) throws IOException, InterruptedException {
         try {
-            logger.debug("+++++++++++ A NEW COMPUTER ONLINE ++++++ {} -- {}", computer.getName(), java.lang.System.currentTimeMillis());
-        
             node.setNodeName(computer.getName());
             node.setStartTime(java.lang.System.currentTimeMillis());
 
@@ -112,11 +108,9 @@ public class PipelineComputerListener extends ComputerListener {
 
             nodeDuration.labels(labelValueArray).observe(node.getQueueDuration());
             nodeDuration.collect();
-
             nodeDurationGauge.labels(labelValueArray).set(node.getQueueDuration());
             nodeDurationGauge.collect();
 
-            // There is a delay of like 5 min before these change on the prom endpoint
             data.addAll(nodeDuration.collect());
             data.addAll(nodeDurationGauge.collect());
 
