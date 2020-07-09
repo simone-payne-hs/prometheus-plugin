@@ -30,7 +30,7 @@ public class PipelineComputerListener extends ComputerListener {
 
     private NodeInfo node = new NodeInfo();
 
-    String[] labelKeyArray = { "nodeName" };
+    String[] labelKeyArray = {"nodeName"};
     private Summary nodeDuration = Summary.build().name("nodes_node_queue_duration_milliseconds_test_PIPELINE")
             .help("Time node spent in queue in milliseconds").labelNames(labelKeyArray).register();
 
@@ -56,7 +56,7 @@ public class PipelineComputerListener extends ComputerListener {
         try {
             logger.debug("+++++++++++ A NEW COMPUTER ONLINE ++++++ {} -- {}", computer.getName(), java.lang.System.currentTimeMillis());
         
-            node.setNodeName(cleanNodeName(computer.getName()));
+            node.setNodeName(computer.getName());
             node.setStartTime(java.lang.System.currentTimeMillis());
 
             // log to Prometheus
@@ -86,9 +86,9 @@ public class PipelineComputerListener extends ComputerListener {
         }
         String[] splitName = nodeName.split("-");
         int numSplits = splitName.length;
-        String cleanNodeName = nodeName.replace("-" + splitName[numSplits], "");
+        String cleanedNodeName = nodeName.replace("-" + splitName[numSplits-1], "");
 
-        return cleanNodeName;
+        return cleanedNodeName;
     }
 
     /**
