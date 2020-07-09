@@ -86,7 +86,7 @@ public class PipelineComputerListener extends ComputerListener {
         }
         String[] splitName = nodeName.split("-");
         int numSplits = splitName.length;
-        String cleanNodeName = nodeName.replace("-" + splitName[numSplits - 1], "");
+        String cleanNodeName = nodeName.replace("-" + splitName[numSplits], "");
 
         return cleanNodeName;
     }
