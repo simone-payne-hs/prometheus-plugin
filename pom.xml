@@ -8,11 +8,11 @@
     <relativePath />
   </parent>
 
-  <artifactId>fake-prometheus</artifactId>
+  <artifactId>prometheus</artifactId>
   <version>2.0.12-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Fake prom metrics plugin</name>
-  <description>wawawawawa Jenkins metrics in prometheus format</description>
+  <description>Jenkins metrics in prometheus format</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Prometheus+Plugin</url>
   <inceptionYear>2016</inceptionYear>
 
