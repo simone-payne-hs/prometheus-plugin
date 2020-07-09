@@ -25,16 +25,17 @@ import org.jenkinsci.plugins.prometheus.config.PrometheusConfiguration;
 public class PipelineComputerListener extends ComputerListener {
     private static final Logger logger = LoggerFactory.getLogger(PipelineComputerListener.class);
 
-    public static final String PRELAUNCH_ERROR = "Failed to collect node onfo on start with exception: ";
-    public static final String ONLINE_ERROR = "Failed to collect node onfo on start with exception: ";
+    public static final String PRELAUNCH_ERROR = "Failed to collect node info on prelaunch with exception: ";
+    public static final String ONLINE_ERROR = "Failed to collect node info on start with exception: ";
 
+    String fullname = "builds";
     private NodeInfo node = new NodeInfo();
 
     String[] labelKeyArray = {"nodeName"};
-    private Summary nodeDuration = Summary.build().name("nodes_node_queue_duration_milliseconds_test_PIPELINE")
+    private Summary nodeDuration = Summary.build().name(fullname + "_node_queue_duration_milliseconds")
             .help("Time node spent in queue in milliseconds").labelNames(labelKeyArray).register();
 
-    private Gauge nodeDurationGauge = Gauge.build().name("nodes_node_queue_duration_milliseconds_test_GAUGE_PIPELINE")
+    private Gauge nodeDurationGauge = Gauge.build().name(fullname + "_node_queue_duration_milliseconds_gauge")
             .help("Time node spent in queue in milliseconds as gauge").labelNames(labelKeyArray).register();
 
 
